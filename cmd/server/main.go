@@ -64,7 +64,9 @@ func main() {
 	r.POST("/api/v1/wallet", handleWalletOperation)
 	r.GET("/api/v1/wallets/:walletId", handleGetBalance)
 
-	r.Run(":8080")
+	viper.SetDefault("HTTP_PORT", ":8080")
+	httpPort := viper.GetString("HTTP_PORT")
+	r.Run(httpPort)
 }
 
 func createTablesIfNotExist() error {
