@@ -6,6 +6,7 @@ toolchain go1.24.5
 
 require (
 	github.com/gin-gonic/gin v1.9.1
+	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.5.4
 	github.com/shopspring/decimal v1.3.1
 	github.com/spf13/viper v1.17.0
