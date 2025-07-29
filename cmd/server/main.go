@@ -23,13 +23,15 @@ func main() {
 	db.InitDB()
 	defer db.CloseDB()
 
+	dbProvider := db.NewPgxDBProvider(db.DB)
+
 	if err := db.CreateTablesIfNotExist(); err != nil {
 		log.Fatalf("Initializing DB tables error: %v", err)
 	}
 
 	cacheInstance := &cache.BalanceCache{}
-	queueManager := queue.NewQueueManager(cacheInstance)
-	handler := api.NewHandler(cacheInstance, queueManager)
+	queueManager := queue.NewQueueManager(cacheInstance, dbProvider)
+	handler := api.NewHandler(cacheInstance, queueManager, dbProvider)
 
 	r := gin.Default()
 	r.POST("/api/v1/wallet", handler.HandleWalletOperation)
@@ -37,5 +39,7 @@ func main() {
 
 	viper.SetDefault("HTTP_PORT", "8080")
 	httpPort := viper.GetString("HTTP_PORT")
-	r.Run(":" + httpPort)
+	if err := r.Run(":" + httpPort); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }

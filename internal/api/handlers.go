@@ -15,10 +15,11 @@ import (
 type Handler struct {
 	Cache *cache.BalanceCache
 	Queue *queue.QueueManager
+	DB    db.DBProvider
 }
 
-func NewHandler(c *cache.BalanceCache, q *queue.QueueManager) *Handler {
-	return &Handler{Cache: c, Queue: q}
+func NewHandler(c *cache.BalanceCache, q *queue.QueueManager, dbProvider db.DBProvider) *Handler {
+	return &Handler{Cache: c, Queue: q, DB: dbProvider}
 }
 
 func (h *Handler) HandleWalletOperation(c *gin.Context) {
@@ -56,7 +57,7 @@ func (h *Handler) HandleGetBalance(c *gin.Context) {
 		return
 	}
 	var balance models.Wallet
-	err = db.DB.QueryRow(c, "SELECT balance FROM wallets WHERE wallet_id=$1", walletId).Scan(&balance.Balance)
+	err = h.DB.QueryRow(c, "SELECT balance FROM wallets WHERE wallet_id=$1", walletId).Scan(&balance.Balance)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Wallet not found"})
 		return
