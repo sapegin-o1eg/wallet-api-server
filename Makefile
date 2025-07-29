@@ -2,7 +2,10 @@ run:
 	go run cmd/server/main.go
 
 test:
-	go test ./...
+	go test -count=1 ./...
+
+test-integration:
+	go test -count=1./tests/... -v
 
 lint:
 	golangci-lint run || true
@@ -10,4 +13,4 @@ lint:
 fmt:
 	gofmt -w .
 
-.PHONY: run test lint fmt 
+.PHONY: run test test-integration lint fmt
