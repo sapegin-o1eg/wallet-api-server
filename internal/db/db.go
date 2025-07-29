@@ -45,8 +45,8 @@ func CreateTablesIfNotExist() error {
 	return err
 }
 
-// DBProvider описывает интерфейс для работы с БД
-// (или используйте testify/mock вручную)
+// DBProvider describes the interface for working with the database
+// (or use testify/mock manually)
 //
 //go:generate mockery --name=DBProvider --output=./mocks --case=underscore
 type DBProvider interface {
@@ -67,7 +67,7 @@ type TxProvider interface {
 	Rollback(ctx context.Context) error
 }
 
-// PgxDBProvider реализует DBProvider поверх pgxpool.Pool
+// PgxDBProvider implements DBProvider on top of pgxpool.Pool
 
 // Ensure PgxDBProvider implements DBProvider
 var _ DBProvider = (*PgxDBProvider)(nil)

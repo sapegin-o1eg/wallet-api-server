@@ -15,9 +15,9 @@ import (
 	"wallet-api-server/internal/models"
 )
 
-// mockDBProvider реализует db.DBProvider для тестов
-// mockTxProvider реализует db.TxProvider для тестов
-// mockRowScanner реализует db.RowScanner для тестов
+// mockDBProvider implements db.DBProvider for tests
+// mockTxProvider implements db.TxProvider for tests
+// mockRowScanner implements db.RowScanner for tests
 
 type mockDBProvider struct{ mock.Mock }
 

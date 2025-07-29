@@ -67,7 +67,9 @@ func TestWalletConcurrency(t *testing.T) {
 
 	var initialResp WalletResponse
 	err = json.NewDecoder(resp.Body).Decode(&initialResp)
-	resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		t.Logf("Error closing response body: %v", closeErr)
+	}
 	require.NoError(t, err)
 
 	assert.Equal(t, walletID, initialResp.WalletId)
@@ -84,7 +86,9 @@ func TestWalletConcurrency(t *testing.T) {
 
 	var balanceResp BalanceResponse
 	err = json.NewDecoder(resp.Body).Decode(&balanceResp)
-	resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		t.Logf("Error closing response body: %v", closeErr)
+	}
 	require.NoError(t, err)
 
 	assert.Equal(t, walletID, balanceResp.WalletId)
@@ -131,7 +135,11 @@ func TestWalletConcurrency(t *testing.T) {
 			return
 		}
 
-		defer resp.Body.Close()
+		defer func() {
+			if closeErr := resp.Body.Close(); closeErr != nil {
+				t.Logf("Error closing response body: %v", closeErr)
+			}
+		}()
 
 		mu.Lock()
 		if resp.StatusCode == http.StatusOK {
@@ -175,7 +183,9 @@ func TestWalletConcurrency(t *testing.T) {
 	require.Equal(t, http.StatusOK, resp.StatusCode)
 
 	err = json.NewDecoder(resp.Body).Decode(&balanceResp)
-	resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		t.Logf("Error closing response body: %v", closeErr)
+	}
 	require.NoError(t, err)
 
 	assert.Equal(t, walletID, balanceResp.WalletId)
